@@ -20,7 +20,7 @@ cd $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-server
 
 PID=$(ps -ef | grep "$PRO_SERVER__PREFIX_NAME-server" | grep -v grep | awk '{print $2}')
 
-echo "current project $PRO_SERVER__PREFIX_NAME-server pid : " $pid
+echo "current project $PRO_SERVER__PREFIX_NAME-server pid : " $PID
 
 kill -9 $PID
 
