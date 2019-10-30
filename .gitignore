@@ -32,3 +32,4 @@ build/
 
 logs
 nohup.out
+server.log

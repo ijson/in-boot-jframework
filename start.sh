@@ -1,34 +1,48 @@
 #!/usr/bin/env bash
 
-project_name=in-boot-jframework
+PRO_HOME_PATH=/Users/cuiyongxu/workspace/ijson/in-boot-jframework
+PRO_SERVER__PREFIX_NAME=in-boot
 
-server_name=in-boot-server
-
-home_path=/Users/cuiyongxu/workspace/ijson
-
-bash_path=$home_path/$project_name
-
-cd $bash_path
+cd $PRO_HOME_PATH
 
 git pull
 
-cd $bash_path/in-proxy-common
+cd $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-common
 mvn clean install -Dmaven.test.skip=true
 
-cd $bash_path/in-proxy-core
+cd $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-remote
 mvn clean install -Dmaven.test.skip=true
 
-cd $bash_path/in-proxy-server
+cd $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-core
+mvn clean install -Dmaven.test.skip=true
 
-pid=$(ps -ef | grep "in-proxy-server" | grep -v grep | awk '{print $2}')
+cd $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-server
 
-echo "current in-proxy-server pid:" $pid
+PID=$(ps -ef | grep "$PRO_SERVER__PREFIX_NAME-server" | grep -v grep | awk '{print $2}')
 
-kill -9 $pid
+echo "current project $PRO_SERVER__PREFIX_NAME-server pid : " $pid
 
-DATE=$(date +%Y%m%d%H%M%S)
-cd $bash_path/in-proxy-server
-mv $bash_path/in-proxy-server/nohup.out /home/liyaping/in-proxy-server-log/$DATE.log
+kill -9 $PID
 
-cd $bash_path/in-proxy-server/
-nohup mvn spring-boot:run >> nohup.out 2>&1 &
+cd $PRO_HOME_PATH
+
+FATHER_PATH=$(dirname $(pwd))
+
+echo "当前父类路径:"$FATHER_PATH
+CREATE_PATH=$FATHER_PATH/$PRO_SERVER__PREFIX_NAME-server-log
+echo "创建目录:"$CREATE_PATH
+
+
+if [ ! -d $CREATE_PATH ];then
+mkdir $CREATE_PATH
+else
+echo $CREATE_PATH"文件夹已经存在"
+fi
+
+
+DATE=$(date +%Y%m%d%H%M%S)-$PRO_SERVER__PREFIX_NAME-server
+cd $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-server
+mv $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-server/server.log $CREATE_PATH/$DATE.log
+
+cd $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-server
+nohup mvn spring-boot:run >> server.log 2>&1 &
