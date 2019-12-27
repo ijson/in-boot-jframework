@@ -20,9 +20,13 @@ cd $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-server
 
 PID=$(ps -ef | grep "$PRO_SERVER__PREFIX_NAME-server" | grep -v grep | awk '{print $2}')
 
-echo "current project $PRO_SERVER__PREFIX_NAME-server pid : " $PID
 
-kill -9 $PID
+if [ ! -n "$PID" ]; then
+  echo "server not start"
+else
+  echo "current project $PRO_SERVER__PREFIX_NAME-server pid : " $PID
+  kill -9 $PID
+fi
 
 cd $PRO_HOME_PATH
 
@@ -34,15 +38,12 @@ echo "创建目录:"$CREATE_PATH
 
 
 if [ ! -d $CREATE_PATH ];then
-mkdir $CREATE_PATH
+    mkdir $CREATE_PATH
 else
-echo $CREATE_PATH"文件夹已经存在"
+    echo $CREATE_PATH"文件夹已经存在"
 fi
 
-
-DATE=$(date +%Y%m%d%H%M%S)-$PRO_SERVER__PREFIX_NAME-server
 cd $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-server
-mv $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-server/server.log $CREATE_PATH/$DATE.log
 
-cd $PRO_HOME_PATH/$PRO_SERVER__PREFIX_NAME-server
-nohup mvn spring-boot:run >> server.log 2>&1 &
+#nohup mvn spring-boot:run >> server.log 2>&1 &
+mvn spring-boot:run

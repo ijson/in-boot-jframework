@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="false" scanPeriod="60 seconds" debug="false">
+
+    <!-- 输出到控制台 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <contextName>in-proxy-crawler</contextName>
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>../../logs/in-proxy-crawler.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${catalina.home}/logs/in-proxy-crawler.%d{yyyyMMdd}.log.zip</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{HH:mm:ss},thread=[%thread],%-5level
+                log=%logger{12},msg=%msg,%rEx{full,
+                java.lang.Thread,
+                javassist,
+                sun.reflect,
+                org.springframework,
+                org.apache,
+                org.eclipse.jetty,
+                $Proxy,
+                java.net,
+                java.io,
+                javax.servlet,
+                org.junit,
+                com.mysql,
+                com.sun,
+                org.mybatis.spring,
+                cglib,
+                CGLIB,
+                java.util.concurrent,
+                okhttp,
+                org.jboss,
+                }%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 异步输出日志避免阻塞服务 -->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>512</queueSize>
+        <appender-ref ref="RollingFile"/>
+    </appender>
+
+    <!-- 配置基础组件为WARN级别，避免打印过多影响服务自己日志 -->
+    <logger name="druid.sql" level="INFO"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+
+
+    <logger name="in-proxy-crawler" level="INFO" additivity="false">
+        <appender-ref ref="ASYNC"/>
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="ASYNC"/>
+        <appender-ref ref="STDOUT" />
+    </root>
+
+
+</configuration>
