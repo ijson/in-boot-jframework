@@ -1,10 +1,10 @@
-mongo.servers = mongodb://localhost
+mongo.servers = mongodb://cuiyongxu:cuiyongxu@127.0.0.1:27017
 #mongo.servers = mongodb://www.ijson.com:27127
 mongo.dbName = IPProxy
 
 mongo.mapPackage = com.ijson.proxy.core.dao.entity
 mongo.connectTimeout = 5000
 mongo.socketTimeout = 10000
-encrypt.pwd=false
+encrypt.pwd=true
 
 process.server.id=1

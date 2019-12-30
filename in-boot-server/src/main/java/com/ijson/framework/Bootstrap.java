@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ImportResource;
 public class Bootstrap {
 
 	public static void main(String[] args) {
+		System.setProperty("config.enableZookeeper", "false");
 		SpringApplication.run(Bootstrap.class, args);
 	}
 
